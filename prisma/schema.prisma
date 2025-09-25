@@ -1,0 +1,138 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  //output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Utilisateur {
+  id           String   @id @default(uuid())
+  login        String   @unique @db.VarChar(250)
+  mot_de_passe String   @db.VarChar(250)
+  roleId       String
+  role         Role     @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Role {
+  id          String        @id @default(uuid())
+  nom         String        @unique
+  code        String        @unique
+  description String?
+  permissions Permission[]  @relation("RolePermissions")
+  utilisateur Utilisateur[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model Permission {
+  id          String   @id @default(uuid())
+  nom         String   @unique
+  description String?  @db.VarChar(250)
+  roles       Role[]   @relation("RolePermissions")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model TypeAdministration {
+  id              String           @id @default(uuid())
+  libelle         String           @unique @db.VarChar(250)
+  administrations Administration[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+}
+
+model Contact {
+  id              String           @id @default(uuid())
+  libelle         String
+  type            ContactType
+  administrationId String
+  Administration   Administration @relation(fields: [administrationId], references: [id])
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+}
+
+enum ContactType {
+  Telephone
+  Email
+  Fax
+  Autre
+}
+
+model Service {
+  id              String           @id @default(uuid())
+  description     String
+  administrationId String
+  Administration   Administration @relation(fields: [administrationId], references: [id])
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  
+}
+
+model Ville {
+  id        String   @id @default(uuid())
+  nom       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  administrations Administration[]
+}
+
+enum JourSemaine {
+  LUNDI
+  MARDI
+  MERCREDI
+  JEUDI
+  VENDREDI
+  SAMEDI
+}
+
+model Horaire {
+  id             String      @id @default(uuid())
+  jour           JourSemaine
+  heureOuverture String
+  heureFermeture String
+
+  administrationId String
+  administration   Administration @relation(fields: [administrationId], references: [id])
+}
+
+model AdministrationImage {
+  id               String         @id @default(uuid())
+  url              String // lien ou chemin vers l’image
+  administrationId String
+  administration   Administration @relation(fields: [administrationId], references: [id])
+}
+
+model Administration {
+  id                 String   @id @default(uuid())
+  nom                String   @unique
+  ministereDeTutelle String?
+  mission            String
+  latitude           Float
+  longitude          Float
+  quartier           String
+  cover              String?
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  villeId String?
+  ville   Ville?  @relation(fields: [villeId], references: [id])
+
+  typeAdministrationId String?
+  typeAdministration   TypeAdministration? @relation(fields: [typeAdministrationId], references: [id])
+  //relation many to many
+  services Service[] 
+  horaires Horaire[]
+  images   AdministrationImage[]
+  contacts Contact[]
+}
