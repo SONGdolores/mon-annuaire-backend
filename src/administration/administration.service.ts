@@ -1,36 +1,37 @@
-import {Injectable,NotFoundException,ConflictException,InternalServerErrorException,} from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, InternalServerErrorException, } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateAdministrationDto } from './dto/create-administration';
 import { UpdateAdministrationDto } from './dto/update-administration';
+import { JourSemaine } from '@prisma/client';
 
 @Injectable()
 export class AdministrationService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async create(dto: CreateAdministrationDto) {
     console.log('DTO reçu dans create:', dto);
     try {
       const admin = await this.prisma.administration.create({
         data: {
-        nom: dto.nom,
-        ministereDeTutelle: dto.ministereDeTutelle,
-        mission: dto.mission,
-        quartier: dto.quartier,
-        latitude: dto.latitude,
-        longitude: dto.longitude,
+          nom: dto.nom,
+          ministereDeTutelle: dto.ministereDeTutelle,
+          mission: dto.mission,
+          quartier: dto.quartier,
+          latitude: dto.latitude,
+          longitude: dto.longitude,
 
-        ville: dto.villeId ? { connect: { id: dto.villeId } } : undefined,
-        typeAdministration: { connect: { id: dto.typeAdministrationId } },
-      },
-      include: {
-        contacts: true,
-        services: true,
-        horaires: true,
-        images: true,
-        ville: true,
-        typeAdministration: true,
-      },
-        });
+          ville: dto.villeId ? { connect: { id: dto.villeId } } : undefined,
+          typeAdministration: { connect: { id: dto.typeAdministrationId } },
+        },
+        include: {
+          contacts: true,
+          services: true,
+          horaires: true,
+          images: true,
+          ville: true,
+          typeAdministration: true,
+        },
+      });
 
       return admin;
     } catch (e: any) {
@@ -43,8 +44,8 @@ export class AdministrationService {
     }
   }
 
-  
-  async findAll(params: {search?: string;categorie?: string;page: number;limit: number;  }) {
+
+  async findAll(params: { search?: string; categorie?: string; page: number; limit: number; }) {
     const { search, categorie, page, limit } = params;
 
     const where: any = {};
@@ -87,7 +88,7 @@ export class AdministrationService {
     });
   }
 
- 
+
   async findOne(id: string) {
     const admin = await this.prisma.administration.findUnique({
       where: { id },
@@ -96,7 +97,7 @@ export class AdministrationService {
         typeAdministration: { select: { libelle: true } },
         contacts: { select: { libelle: true, type: true } },
         services: { select: { description: true } },
-        horaires: true, 
+        horaires: true,
         images: true,
       },
     });
@@ -104,7 +105,7 @@ export class AdministrationService {
     return admin;
   }
 
- 
+
   async update(id: string, dto: UpdateAdministrationDto) {
     try {
       const updated = await this.prisma.administration.update({
@@ -113,23 +114,60 @@ export class AdministrationService {
           nom: dto.nom,
           ministereDeTutelle: dto.ministereDeTutelle,
           mission: dto.mission,
+          quartier: dto.quartier,
           latitude: dto.latitude,
           longitude: dto.longitude,
-          quartier: dto.quartier,
           cover: dto.cover,
           villeId: dto.villeId,
           typeAdministrationId: dto.typeAdministrationId,
+
+          // Création de nouveaux services
+          services: dto.services && dto.services.length > 0
+            ? {
+              create: dto.services.map((s) => ({
+                description: s.description,
+              })),
+            }
+            : undefined,
+
+          // Création de nouveaux horaires
+          horaires: dto.horaires && dto.horaires.length > 0
+            ? {
+              create: dto.horaires.map((h) => ({
+                jour: h.jour,
+                heureOuverture: h.heureOuverture,
+                heureFermeture: h.heureFermeture,
+              })),
+            }
+            : undefined,
+
+          // Création de nouveaux contacts
+          contacts: dto.contacts && dto.contacts.length > 0
+            ? {
+              create: dto.contacts.map((c) => ({
+                libelle: c.libelle,
+                type: c.type,
+              })),
+            }
+            : undefined,
+
+          // Création de nouvelles images (galerie)
+          images: dto.images && dto.images.length > 0
+            ? {
+              create: dto.images.map(url => ({ url })),
+            }
+            : undefined,
         },
         include: {
           ville: { select: { nom: true } },
           typeAdministration: { select: { libelle: true } },
-          contacts: { select: { libelle: true, type: true } },
-          services: { select: { description: true } },
-          horaires: true, 
+          contacts: { select: { id: true, libelle: true, type: true } },
+          services: { select: { id: true, description: true } },
+          horaires: true,
           images: true,
         },
       });
-      console.log('DTO reçu dans update:', dto); 
+      console.log('DTO reçu dans update:', dto);
       return updated;
     } catch (e: any) {
       if (e.code === 'P2025')
