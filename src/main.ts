@@ -1,17 +1,20 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder} from '@nestjs/swagger';
 import { AppModule } from './app.module';
-//import { ValidationPipe } from '@nestjs/common';
+import { join } from 'path';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import * as express from 'express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  //app.useGlobalPipes(new ValidationPipe());
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.enableCors({
     origin: 'http://localhost:4200', //autorise seulement angular
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    Credentials: true
+    credentials: true
   })
+
+  app.use('/uploads', express.static(join(__dirname, '..', 'uploads')));
 
   const config = new DocumentBuilder()
     .setTitle('API sécurisé')

@@ -195,4 +195,20 @@ export class AdministrationService {
       );
     }
   }
+
+  async updateCover(id: string, filename: string) {
+  return this.prisma.administration.update({
+    where: { id },
+    data: { cover: `/uploads/${filename}` }, // on stocke le chemin relatif
+  });
+}
+
+async addImage(id: string, filename: string) {
+  return this.prisma.administrationImage.create({
+    data: {
+      administrationId: id,
+      url: `/uploads/${filename}`,
+    },
+  });
+}
 }

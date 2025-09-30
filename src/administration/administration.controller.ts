@@ -1,9 +1,13 @@
-import {Controller,Get,Post,Body,Patch,Param,Delete,UseGuards, Query,} from '@nestjs/common';
+import {Controller,Get,Post,Body,Patch,Param,Delete,UseGuards, Query, UseInterceptors, UploadedFile,} from '@nestjs/common';
 import {ApiTags,ApiOperation,ApiResponse,ApiParam,ApiBearerAuth,ApiQuery} from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { AdministrationService } from './administration.service';
 import { CreateAdministrationDto } from './dto/create-administration';
 import { UpdateAdministrationDto } from './dto/update-administration';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { extname } from 'path';
+import { v4 as uuidv4 } from 'uuid';
 
 @ApiBearerAuth('Bearer')
 @ApiTags('Gestion des administrations')
@@ -67,5 +71,38 @@ export class AdministrationController {
   @ApiResponse({ status: 404, description: 'Administration non trouvée.' })
   remove(@Param('id') id: string) {
     return this.administrationService.remove(id);
+  }
+
+
+  @Post(':id/upload-cover')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req, file, cb) => {
+          const randomName = uuidv4() + extname(file.originalname);
+          cb(null, randomName);
+        },
+      }),
+    }),
+  )
+  async uploadCover(@Param('id') id: string, @UploadedFile() file: Express.Multer.File) {
+    return this.administrationService.updateCover(id, file.filename);
+  }
+
+  @Post(':id/upload-image')
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req, file, cb) => {
+          const randomName = uuidv4() + extname(file.originalname);
+          cb(null, randomName);
+        },
+      }),
+    }),
+  )
+  async uploadImage(@Param('id') id: string, @UploadedFile() file: Express.Multer.File) {
+    return this.administrationService.addImage(id, file.filename);
   }
 }

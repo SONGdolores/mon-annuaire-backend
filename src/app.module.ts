@@ -22,12 +22,14 @@ import { HoraireModule } from './horaire/horaire.module';
 import { AdministrationImageController } from './administration-image/administration-image.controller';
 import { AdministrationImageService } from './administration-image/administration-image.service';
 import { AdministrationImageModule } from './administration-image/administration-image.module';
+import { UploadController } from './upload/upload.controller';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [ PrismaModule, PermissionModule,RoleModule, AuthModule, 
-    ConfigModule.forRoot({isGlobal: true}), UsersModule, TypeAdministrationModule, ContactModule, ServiceModule, VilleModule, ContactTypeModule, AdministrationModule, HoraireModule, AdministrationImageModule
+    ConfigModule.forRoot({isGlobal: true}), UsersModule, TypeAdministrationModule, ContactModule, ServiceModule, VilleModule, ContactTypeModule, AdministrationModule, HoraireModule, AdministrationImageModule, UploadModule
   ],
-  controllers: [AppController, ContactController, AdministrationImageController],
+  controllers: [AppController, ContactController, AdministrationImageController, UploadController],
   providers: [AppService, ContactService, ServiceService, AdministrationImageService],
 })
 export class AppModule {}
