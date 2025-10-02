@@ -36,7 +36,7 @@ export class AdministrationController {
     @Query('search') search?: string,
     @Query('categorie') categorie?: string,
     @Query('page') page: number = 1,
-    @Query('limit') limit: number = 6,
+    @Query('limit') limit: number = 4,
   ) {
     return this.administrationService.findAll({
       search,

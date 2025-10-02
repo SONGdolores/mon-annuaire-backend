@@ -57,7 +57,7 @@ model Contact {
   libelle         String
   type            ContactType
   administrationId String
-  Administration   Administration @relation(fields: [administrationId], references: [id])
+  Administration   Administration @relation(fields: [administrationId], references: [id], onDelete: Cascade)
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
 }
@@ -73,7 +73,7 @@ model Service {
   id              String           @id @default(uuid())
   description     String
   administrationId String
-  Administration   Administration @relation(fields: [administrationId], references: [id])
+  Administration   Administration @relation(fields: [administrationId], references: [id], onDelete: Cascade)
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   
@@ -103,14 +103,14 @@ model Horaire {
   heureFermeture String
 
   administrationId String
-  administration   Administration @relation(fields: [administrationId], references: [id])
+  administration   Administration @relation(fields: [administrationId], references: [id], onDelete: Cascade)
 }
 
 model AdministrationImage {
   id               String         @id @default(uuid())
   url              String // lien ou chemin vers l’image
   administrationId String
-  administration   Administration @relation(fields: [administrationId], references: [id])
+  administration   Administration @relation(fields: [administrationId], references: [id], onDelete: Cascade)
 }
 
 model Administration {

@@ -2,7 +2,6 @@ import { Injectable, NotFoundException, ConflictException, InternalServerErrorEx
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateAdministrationDto } from './dto/create-administration';
 import { UpdateAdministrationDto } from './dto/update-administration';
-import { JourSemaine } from '@prisma/client';
 
 @Injectable()
 export class AdministrationService {
@@ -46,21 +45,25 @@ export class AdministrationService {
 
 
   async findAll(params: { search?: string; categorie?: string; page: number; limit: number; }) {
-    const { search, categorie, page, limit } = params;
+    const { search, categorie, page = 1 , limit } = params;
 
     const where: any = {};
 
     if (search) {
       where.OR = [
         { nom: { contains: search, mode: 'insensitive' } },
-        { adresse: { contains: search, mode: 'insensitive' } },
         { services: { some: { description: { contains: search, mode: 'insensitive' } } } },
       ];
     }
 
     if (categorie) {
-      where.TypeAdministration = { libelle: categorie };
+      where.typeAdministrationId = categorie ;
     }
+
+    const skip = limit ? (page - 1) * limit : undefined;
+    const take = limit || undefined;
+
+     console.log('Filtre where généré:', where);
 
     const [items, total] = await Promise.all([
       this.prisma.administration.findMany({
