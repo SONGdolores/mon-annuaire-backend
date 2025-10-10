@@ -72,37 +72,4 @@ export class AdministrationController {
   remove(@Param('id') id: string) {
     return this.administrationService.remove(id);
   }
-
-
-  @Post(':id/upload-cover')
-  @UseInterceptors(
-    FileInterceptor('file', {
-      storage: diskStorage({
-        destination: './uploads',
-        filename: (req, file, cb) => {
-          const randomName = uuidv4() + extname(file.originalname);
-          cb(null, randomName);
-        },
-      }),
-    }),
-  )
-  async uploadCover(@Param('id') id: string, @UploadedFile() file: Express.Multer.File) {
-    return this.administrationService.updateCover(id, file.filename);
-  }
-
-  @Post(':id/upload-image')
-  @UseInterceptors(
-    FileInterceptor('file', {
-      storage: diskStorage({
-        destination: './uploads',
-        filename: (req, file, cb) => {
-          const randomName = uuidv4() + extname(file.originalname);
-          cb(null, randomName);
-        },
-      }),
-    }),
-  )
-  async uploadImage(@Param('id') id: string, @UploadedFile() file: Express.Multer.File) {
-    return this.administrationService.addImage(id, file.filename);
-  }
 }

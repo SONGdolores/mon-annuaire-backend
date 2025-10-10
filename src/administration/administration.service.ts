@@ -21,6 +21,14 @@ export class AdministrationService {
 
           ville: dto.villeId ? { connect: { id: dto.villeId } } : undefined,
           typeAdministration: { connect: { id: dto.typeAdministrationId } },
+
+            cover: dto.cover
+            ? {
+                create: {
+                  url: dto.cover,
+                },
+              }
+            : undefined,
         },
         include: {
           contacts: true,
@@ -29,6 +37,7 @@ export class AdministrationService {
           images: true,
           ville: true,
           typeAdministration: true,
+          cover:true,
         },
       });
 
@@ -75,6 +84,7 @@ export class AdministrationService {
           services: true,
           horaires: true,
           images: true,
+          cover: true,
         },
         skip: (page - 1) * limit,
         take: limit,
@@ -102,6 +112,7 @@ export class AdministrationService {
         services: { select: { description: true } },
         horaires: true,
         images: true,
+        cover:true,
       },
     });
     if (!admin) throw new NotFoundException('Administration introuvable');
@@ -120,7 +131,6 @@ export class AdministrationService {
           quartier: dto.quartier,
           latitude: dto.latitude,
           longitude: dto.longitude,
-          cover: dto.cover,
           villeId: dto.villeId,
           typeAdministrationId: dto.typeAdministrationId,
 
@@ -160,6 +170,15 @@ export class AdministrationService {
               create: dto.images.map(url => ({ url })),
             }
             : undefined,
+
+             cover: dto.cover
+            ? {
+                upsert: {
+                  update: { url: dto.cover },
+                  create: { url: dto.cover },
+                },
+              }
+            : undefined,
         },
         include: {
           ville: { select: { nom: true } },
@@ -168,6 +187,7 @@ export class AdministrationService {
           services: { select: { id: true, description: true } },
           horaires: true,
           images: true,
+          cover: true,
         },
       });
       console.log('DTO reçu dans update:', dto);
@@ -199,19 +219,4 @@ export class AdministrationService {
     }
   }
 
-  async updateCover(id: string, filename: string) {
-  return this.prisma.administration.update({
-    where: { id },
-    data: { cover: `/uploads/${filename}` }, // on stocke le chemin relatif
-  });
-}
-
-async addImage(id: string, filename: string) {
-  return this.prisma.administrationImage.create({
-    data: {
-      administrationId: id,
-      url: `/uploads/${filename}`,
-    },
-  });
-}
 }

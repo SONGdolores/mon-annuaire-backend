@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  //output   = "../generated/prisma"
 }
 
 datasource db {
@@ -108,8 +107,15 @@ model Horaire {
 
 model AdministrationImage {
   id               String         @id @default(uuid())
-  url              String // lien ou chemin vers l’image
+  url              String 
   administrationId String
+  administration   Administration @relation(fields: [administrationId], references: [id], onDelete: Cascade)
+}
+
+model Cover {
+  id               String         @id @default(uuid())
+  url              String         
+  administrationId String         @unique
   administration   Administration @relation(fields: [administrationId], references: [id], onDelete: Cascade)
 }
 
@@ -121,7 +127,6 @@ model Administration {
   latitude           Float
   longitude          Float
   quartier           String
-  cover              String?
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 
@@ -130,9 +135,12 @@ model Administration {
 
   typeAdministrationId String?
   typeAdministration   TypeAdministration? @relation(fields: [typeAdministrationId], references: [id])
+  
   //relation many to many
   services Service[] 
   horaires Horaire[]
   images   AdministrationImage[]
   contacts Contact[]
+  cover    Cover?
+
 }

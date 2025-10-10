@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from './dto/login.dto';
 import * as bcrypt from 'bcrypt';
@@ -23,7 +23,7 @@ export class AuthService {
         include: {
           role: {
             include: {
-              permissions: true, // Inclure les permissions associées au rôle
+              permissions: true, 
             },
           },
         },
@@ -31,7 +31,7 @@ export class AuthService {
 
       // Vérification si l'utilisateur existe
       if (!user) {
-        throw new UnauthorizedException('Login incorrect');
+        throw new NotFoundException('Utilisateur non trouvé');
       }
 
       // Vérification du mot de passe
