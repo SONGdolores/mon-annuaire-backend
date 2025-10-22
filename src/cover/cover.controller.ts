@@ -41,6 +41,7 @@ export class CoverController {
     },
     limits: { fileSize: 5 * 1024 * 1024 },
   }))
+  
   async uploadCover(
     @UploadedFile() file: Express.Multer.File,
     @Body('administrationId') administrationId: string,
@@ -52,11 +53,11 @@ export class CoverController {
 
   @Patch(':id')
   @ApiOperation({ summary: 'Mettre à jour la cover d’une administration' })
-  @ApiParam({ name: 'id', description: 'ID de l’administration' })
+  @ApiParam({ name: 'id', description: 'ID de la cover' })
   @ApiResponse({ status: 200, description: 'Cover mise à jour avec succès.' })
   @ApiResponse({ status: 404, description: 'Cover ou administration non trouvée.' })
   @ApiConsumes('multipart/form-data')
-  @ApiBody({ type: CreateCoverDto })
+  @ApiBody({ schema: {type: 'object',properties: { file: { type: 'string', format: 'binary' }}} })
   @UseInterceptors(FileInterceptor('file', {
     storage: diskStorage({
       destination: (_req, _file, cb) => {
@@ -77,13 +78,14 @@ export class CoverController {
     },
     limits: { fileSize: 5 * 1024 * 1024 },
   }))
+
   async updateCover(
     @Param('id') id: string,
     @UploadedFile() file: Express.Multer.File,
   ) {
     if (!file) throw new BadRequestException('Fichier manquant');
     const url = `/uploads/covers/${file.filename}`;
-    return this.coverService.create(url, id); // Réutilise create pour update si existant
+    return this.coverService.update(url, id); 
   }
 
   @Get()
