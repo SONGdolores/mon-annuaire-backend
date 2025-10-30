@@ -8,128 +8,157 @@ console.log('--------------');
 
 async function main() {
 
-console.log('Debut des seeders');
+  console.log('Debut des seeders');
 
-const accesApp = await prisma.permission.create({
-data: {
-    nom: "ACCESS_APP",
-    description: "Access a l'application",
-},
-});
-
-const creer_utilisateur = await prisma.permission.create({
-  data: {
-    nom: "CREER_UTILISATEUR",
-    description: "creer un utilisateur",
-},  
-})
-
-const lister_utilisateur = await prisma.permission.create({
-  data: {
-    nom: "LIST_USER",
-    description: "Lister les utilisateurs",
-},  
-})
-
-const modifier_utilisateur = await prisma.permission.create({
-  data: {
-    nom: "UPDATE_UTILISATEUR",
-    description: "Mettre a jour un utilisateur",
-},  
-})
-
-const supprimer_utilisateur = await prisma.permission.create({
-  data: {
-    nom: "DELETE_UTILISATEUR",
-    description: "Supprimer un utilisateur",
-},  
-})
-
-
-const creer_permission = await prisma.permission.create({
-  data: {
-    nom: "CREER_PERMISSION",
-    description: "creer une permission",
-},  
-})
-
-const lister_permission = await prisma.permission.create({
-  data: {
-    nom: "LIST_PERMISSION",
-    description: "Lister les permissions",
-},  
-})
-
-const modifier_permission = await prisma.permission.create({
-  data: {
-    nom: "UPDATE_PERMISSION",
-    description: "Mettre a jour une permission",
-},  
-})
-
-const supprimer_permission = await prisma.permission.create({
-  data: {
-    nom: "DELETE_PERMISSION",
-    description: "Supprimer une permission",
-},  
-})
-
-
-const creer_role = await prisma.permission.create({
-  data: {
-    nom: "CREER_ROLE",
-    description: "creer un role",
-},  
-})
-
-const lister_role = await prisma.permission.create({
-  data: {
-    nom: "LIST_ROLE",
-    description: "Lister les roles",
-},  
-})
-
-const modifier_role = await prisma.permission.create({
-  data: {
-    nom: "UPDATE_ROLE",
-    description: "Mettre a jour un role",
-},  
-})
-
-const supprimer_role= await prisma.permission.create({
-  data: {
-    nom: "DELETE_ROLE",
-    description: "Supprimer un role",
-},  
-})
-
-
-const admin  = await prisma.role.create({
+  const accesApp = await prisma.permission.create({
     data: {
-        nom:"Admin",
-        code:"Admin",
-        description: "Il administre la plateforme",
-        permissions:{
-            connect: [
-                {id: accesApp.id},
-                {id: creer_utilisateur.id},
-                {id: lister_utilisateur.id},
-                {id: modifier_utilisateur.id},
-                {id: supprimer_utilisateur.id},
-                {id: creer_permission.id},
-                {id: lister_permission.id},
-                {id: modifier_permission.id},
-                {id: supprimer_permission.id},
-                {id: creer_role.id},
-                {id: lister_role.id},
-                {id: modifier_role.id},
-                {id: supprimer_role.id},
-            ]
-        }
-    }
-})
+      nom: "ACCESS_APP",
+      description: "Access a l'application",
+    },
+  });
 
-const defaultPassword = await bcrypt.hash("azerty", 10);
+  const creer_utilisateur = await prisma.permission.create({
+    data: {
+      nom: "CREER_UTILISATEUR",
+      description: "creer un utilisateur",
+    },
+  })
+
+  const lister_utilisateur = await prisma.permission.create({
+    data: {
+      nom: "LIST_USER",
+      description: "Lister les utilisateurs",
+    },
+  })
+
+  const modifier_utilisateur = await prisma.permission.create({
+    data: {
+      nom: "UPDATE_UTILISATEUR",
+      description: "Mettre a jour un utilisateur",
+    },
+  })
+
+  const supprimer_utilisateur = await prisma.permission.create({
+    data: {
+      nom: "DELETE_UTILISATEUR",
+      description: "Supprimer un utilisateur",
+    },
+  })
+
+
+  const creer_permission = await prisma.permission.create({
+    data: {
+      nom: "CREER_PERMISSION",
+      description: "creer une permission",
+    },
+  })
+
+  const lister_permission = await prisma.permission.create({
+    data: {
+      nom: "LIST_PERMISSION",
+      description: "Lister les permissions",
+    },
+  })
+
+  const modifier_permission = await prisma.permission.create({
+    data: {
+      nom: "UPDATE_PERMISSION",
+      description: "Mettre a jour une permission",
+    },
+  })
+
+  const supprimer_permission = await prisma.permission.create({
+    data: {
+      nom: "DELETE_PERMISSION",
+      description: "Supprimer une permission",
+    },
+  })
+
+
+  const creer_role = await prisma.permission.create({
+    data: {
+      nom: "CREER_ROLE",
+      description: "creer un role",
+    },
+  })
+
+  const lister_role = await prisma.permission.create({
+    data: {
+      nom: "LIST_ROLE",
+      description: "Lister les roles",
+    },
+  })
+
+  const modifier_role = await prisma.permission.create({
+    data: {
+      nom: "UPDATE_ROLE",
+      description: "Mettre a jour un role",
+    },
+  })
+
+  const supprimer_role = await prisma.permission.create({
+    data: {
+      nom: "DELETE_ROLE",
+      description: "Supprimer un role",
+    },
+  })
+
+  const creer_dcsi = await prisma.permission.create({
+    data: { nom: "CREER_DCSI", description: "Créer un enregistrement DCSI" },
+  });
+  const lister_dcsi = await prisma.permission.create({
+    data: { nom: "LISTER_DCSI", description: "Lister les enregistrements DCSI" },
+  });
+  const modifier_dcsi = await prisma.permission.create({
+    data: { nom: "MODIFIER_DCSI", description: "Modifier un enregistrement DCSI" },
+  });
+  const supprimer_dcsi = await prisma.permission.create({
+    data: { nom: "SUPPRIMER_DCSI", description: "Supprimer un enregistrement DCSI" },
+  });
+
+
+  const admin = await prisma.role.create({
+    data: {
+      nom: "Admin",
+      code: "Admin",
+      description: "Il administre la plateforme",
+      permissions: {
+        connect: [
+          { id: accesApp.id },
+          { id: creer_utilisateur.id },
+          { id: lister_utilisateur.id },
+          { id: modifier_utilisateur.id },
+          { id: supprimer_utilisateur.id },
+          { id: creer_permission.id },
+          { id: lister_permission.id },
+          { id: modifier_permission.id },
+          { id: supprimer_permission.id },
+          { id: creer_role.id },
+          { id: lister_role.id },
+          { id: modifier_role.id },
+          { id: supprimer_role.id },
+        ]
+      }
+    }
+  })
+
+  const dcsiRole = await prisma.role.create({
+    data: {
+      nom: "DCSI",
+      code: "DCSI",
+      description: "Rôle pour la gestion DCSI",
+      permissions: {
+        connect: [
+          { id: creer_dcsi.id },
+          { id: lister_dcsi.id },
+          { id: modifier_dcsi.id },
+          { id: supprimer_dcsi.id },
+        ]
+      }
+    }
+  });
+
+  const defaultPassword = await bcrypt.hash("azerty", 10);
 
   const Admin = await prisma.utilisateur.create({
     data: {
@@ -137,23 +166,31 @@ const defaultPassword = await bcrypt.hash("azerty", 10);
       mot_de_passe: defaultPassword,
       role: {
         connect: { id: admin.id },
-      },
-    },
-  })
+      },
+    },
+  })
 
-const editeurRole  = await prisma.role.create({
+  const DCSIUser = await prisma.utilisateur.create({
     data: {
-        nom:"Editeur",
-        code:"Editeur",
-        description: "Il a accès a une partie de la plateforme",
-        permissions:{
-            connect: [
-                {id: accesApp.id},
-            ]
-        }
+      login: "dcsi",
+      mot_de_passe: defaultPassword,
+      role: { connect: { id: dcsiRole.id } },
+    },
+  });
+
+  const editeurRole = await prisma.role.create({
+    data: {
+      nom: "Editeur",
+      code: "Editeur",
+      description: "Il a accès a une partie de la plateforme",
+      permissions: {
+        connect: [
+          { id: accesApp.id },
+        ]
+      }
     }
 
-} )
+  })
 
 
   const editeur = await prisma.utilisateur.create({
@@ -162,10 +199,11 @@ const editeurRole  = await prisma.role.create({
       mot_de_passe: defaultPassword,
       role: {
         connect: { id: editeurRole.id },
-      },
-    },
-  })
-const villes = [
+      },
+    },
+  })
+
+  const villes = [
     { nom: "Libreville" },
     { nom: "Port-Gentil" },
     { nom: "Franceville" },
@@ -181,18 +219,34 @@ const villes = [
   for (const ville of villes) {
     console.log(ville)
     await prisma.ville.create({
-      data: ville,            // crée la ville sinon
+      data: ville,
     });
   }
-}
 
   console.log("Seed des villes du Gabon terminé ✅");
+
+  const typesAdministration = [
+    { libelle: "Ministère" },
+    { libelle: "Direction" },
+    { libelle: "Préfecture" },
+    { libelle: "Agence" },
+    { libelle: "Mairie" },
+    { libelle: "Administration sociale" },
+    { libelle: "Institution judiciaire" },
+  ];
+
+  for (const type of typesAdministration) {
+    await prisma.typeAdministration.create({ data: type });
+  }
+  console.log("Seed des types d'administration terminé ✅");
+}
+
+
 main()
-.catch((e) => {
+  .catch((e) => {
     console.error(e);
     process.exit(1);
-})
-.finally(async () =>
-{
+  })
+  .finally(async () => {
     await prisma.$disconnect();
-});
+  });

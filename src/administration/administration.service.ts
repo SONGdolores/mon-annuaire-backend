@@ -85,6 +85,7 @@ export class AdministrationService {
           horaires: true,
           images: true,
           cover: true,
+          dcsi: { include: { membres: true } },
         },
         skip: (page - 1) * limit,
         take: limit,
@@ -113,6 +114,7 @@ export class AdministrationService {
         horaires: true,
         images: true,
         cover:true,
+        dcsi: { include: { membres: true } },
       },
     });
     if (!admin) throw new NotFoundException('Administration introuvable');

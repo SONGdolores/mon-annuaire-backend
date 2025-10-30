@@ -21,8 +21,15 @@ $ npm run start:dev
 # production mode
 $ npm run start:prod
 
+# commande pour lancer les seed
+$ npx prisma db seed
+
+# Réinitialise complètement la base et applique toutes les migrations
+$ npx prisma migrate reset
+
+
 #commande pour faire une migration
-npx prisma migrate dev --name
+$ npx prisma migrate dev --name
 
 #Commande pour generer un JWT_SECRETx§§§
 $ node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
