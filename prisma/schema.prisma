@@ -104,38 +104,6 @@ model Horaire {
   administrationId String
   administration   Administration @relation(fields: [administrationId], references: [id], onDelete: Cascade)
 }
-
-model Dcsi {
-  id                String           @id @default(uuid())
-  responsableNom    String
-  responsableEmail  String
-  responsablePhone  String?
-
-  chefServiceNom    String
-  chefServiceEmail  String
-  chefServicePhone  String?
-
-  membres           DcsiMembre[]
-
-  administration    Administration   @relation(fields: [administrationId], references: [id], onDelete: Cascade)
-  administrationId  String           
-
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @updatedAt
-}
-
-model DcsiMembre {
-  id          String   @id @default(uuid())
-  nom         String
-  email       String
-  phone       String?
-  fonction    String?
-
-  dcsi        Dcsi     @relation(fields: [dcsiId], references: [id], onDelete: Cascade)
-  dcsiId      String
-}
-
-
 model AdministrationImage {
   id               String         @id @default(uuid())
   url              String 
@@ -174,6 +142,5 @@ model Administration {
   contacts Contact[]
   cover    Cover?
 
-   dcsi     Dcsi[]
 
 }

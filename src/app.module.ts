@@ -23,12 +23,9 @@ import { AdministrationImageController } from './administration-image/administra
 import { AdministrationImageService } from './administration-image/administration-image.service';
 import { AdministrationImageModule } from './administration-image/administration-image.module';
 import { CoverModule } from './cover/cover.module';
-import { DcsiModule } from './dcsi/dcsi.module';
-import { MembreDsciModule } from './membre-dsci/membre-dsci.module';
-
 @Module({
   imports: [ PrismaModule, PermissionModule,RoleModule, AuthModule, 
-    ConfigModule.forRoot({isGlobal: true}), UsersModule, TypeAdministrationModule, ContactModule, ServiceModule, VilleModule, ContactTypeModule, AdministrationModule, HoraireModule, AdministrationImageModule,  CoverModule, DcsiModule, MembreDsciModule
+    ConfigModule.forRoot({isGlobal: true}), UsersModule, TypeAdministrationModule, ContactModule, ServiceModule, VilleModule, ContactTypeModule, AdministrationModule, HoraireModule, AdministrationImageModule,  CoverModule
   ],
   controllers: [AppController, ContactController, AdministrationImageController,],
   providers: [AppService, ContactService, ServiceService, AdministrationImageService],

@@ -72,7 +72,6 @@ export class AdministrationService {
     const skip = limit ? (page - 1) * limit : undefined;
     const take = limit || undefined;
 
-     console.log('Filtre where généré:', where);
 
     const [items, total] = await Promise.all([
       this.prisma.administration.findMany({
@@ -85,7 +84,6 @@ export class AdministrationService {
           horaires: true,
           images: true,
           cover: true,
-          dcsi: { include: { membres: true } },
         },
         skip: (page - 1) * limit,
         take: limit,
@@ -114,7 +112,6 @@ export class AdministrationService {
         horaires: true,
         images: true,
         cover:true,
-        dcsi: { include: { membres: true } },
       },
     });
     if (!admin) throw new NotFoundException('Administration introuvable');

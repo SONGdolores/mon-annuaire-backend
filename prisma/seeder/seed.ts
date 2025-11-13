@@ -103,20 +103,6 @@ async function main() {
     },
   })
 
-  const creer_dcsi = await prisma.permission.create({
-    data: { nom: "CREER_DCSI", description: "Créer un enregistrement DCSI" },
-  });
-  const lister_dcsi = await prisma.permission.create({
-    data: { nom: "LISTER_DCSI", description: "Lister les enregistrements DCSI" },
-  });
-  const modifier_dcsi = await prisma.permission.create({
-    data: { nom: "MODIFIER_DCSI", description: "Modifier un enregistrement DCSI" },
-  });
-  const supprimer_dcsi = await prisma.permission.create({
-    data: { nom: "SUPPRIMER_DCSI", description: "Supprimer un enregistrement DCSI" },
-  });
-
-
   const admin = await prisma.role.create({
     data: {
       nom: "Admin",
@@ -142,22 +128,6 @@ async function main() {
     }
   })
 
-  const dcsiRole = await prisma.role.create({
-    data: {
-      nom: "DCSI",
-      code: "DCSI",
-      description: "Rôle pour la gestion DCSI",
-      permissions: {
-        connect: [
-          { id: creer_dcsi.id },
-          { id: lister_dcsi.id },
-          { id: modifier_dcsi.id },
-          { id: supprimer_dcsi.id },
-        ]
-      }
-    }
-  });
-
   const defaultPassword = await bcrypt.hash("azerty", 10);
 
   const Admin = await prisma.utilisateur.create({
@@ -169,14 +139,6 @@ async function main() {
       },
     },
   })
-
-  const DCSIUser = await prisma.utilisateur.create({
-    data: {
-      login: "dcsi",
-      mot_de_passe: defaultPassword,
-      role: { connect: { id: dcsiRole.id } },
-    },
-  });
 
   const editeurRole = await prisma.role.create({
     data: {
