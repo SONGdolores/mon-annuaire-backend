@@ -100,6 +100,11 @@ export class AdministrationService {
     });
   }
 
+  async countTotal() {
+  const total = await this.prisma.administration.count();
+  return { total };
+}
+
 
   async findOne(id: string) {
     const admin = await this.prisma.administration.findUnique({
